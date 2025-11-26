@@ -4,5 +4,5 @@ This repository demostrates how to configure Grafana k6 load test script to work
 
 ## Test script configuration phases
 
-1. Unconfigured script: e03700f
-2. Request parameters organized: 676f981
+1. Unconfigured script: [e03700f](/../../commit/e03700f)
+2. Request parameters organized: [676f981](/../../commit/676f981)
