@@ -12,6 +12,8 @@ export const options = {
   ],
 };
 
+const host = "https://vaadin-bookstore-example.demo.vaadin.com/";
+
 export default function () {
   let params;
   let resp;
@@ -22,11 +24,11 @@ export default function () {
 
   group("Default group", function () {
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/`;
+    url = '${host}';
     resp = http.request("GET", url, null, params1);
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -35,11 +37,11 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/offline.html`;
+    url = http.url`${host}offline.html`;
     resp = http.request("GET", url, null, params3);
     check(resp, { "status equals 200": (r) => r.status === 200 });
-
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -48,7 +50,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -57,7 +59,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -66,7 +68,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -75,7 +77,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -84,7 +86,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -93,7 +95,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -102,7 +104,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -111,7 +113,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -120,7 +122,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -129,7 +131,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -138,7 +140,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -147,7 +149,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -156,7 +158,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -165,7 +167,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -174,7 +176,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -183,7 +185,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -192,7 +194,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -201,7 +203,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -210,7 +212,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -219,7 +221,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -228,7 +230,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -237,7 +239,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -246,7 +248,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -255,7 +257,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -264,7 +266,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -273,7 +275,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -282,7 +284,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -291,7 +293,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -300,7 +302,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -309,7 +311,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -318,7 +320,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -327,7 +329,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=0`;
     resp = http.request(
       "POST",
       url,
@@ -336,7 +338,7 @@ export default function () {
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`https://vaadin-bookstore-example.demo.vaadin.com/?v-r=heartbeat&v-uiId=0`;
+    url = http.url`${host}?v-r=heartbeat&v-uiId=0`;
     resp = http.request("POST", url, null, params6);
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
@@ -369,11 +371,11 @@ let params2 = {
     "content-type": `application/json; charset=UTF-8`,
     "sec-ch-ua-mobile": `?0`,
     accept: `*/*`,
-    origin: `https://vaadin-bookstore-example.demo.vaadin.com`,
+    origin: `${host}`,
     "sec-fetch-site": `same-origin`,
     "sec-fetch-mode": `cors`,
     "sec-fetch-dest": `empty`,
-    referer: `https://vaadin-bookstore-example.demo.vaadin.com/`,
+    referer: `${host}`,
     "accept-encoding": `gzip, deflate, br, zstd`,
     "accept-language": `en-US,en;q=0.9`,
     priority: `u=1, i`,
@@ -389,7 +391,7 @@ let params3 = {
     "sec-fetch-site": `same-origin`,
     "sec-fetch-mode": `cors`,
     "sec-fetch-dest": `empty`,
-    referer: `https://vaadin-bookstore-example.demo.vaadin.com/sw.js`,
+    referer: `${host}/sw.js`,
     "accept-encoding": `gzip, deflate, br, zstd`,
     "accept-language": `en-US,en;q=0.9`,
     priority: `u=1, i`,
@@ -404,11 +406,11 @@ let params4 = {
     "content-type": `application/json; charset=UTF-8`,
     "sec-ch-ua-mobile": `?0`,
     accept: `*/*`,
-    origin: `https://vaadin-bookstore-example.demo.vaadin.com`,
+    origin: `${host}`,
     "sec-fetch-site": `same-origin`,
     "sec-fetch-mode": `cors`,
     "sec-fetch-dest": `empty`,
-    referer: `https://vaadin-bookstore-example.demo.vaadin.com/Inventory/new`,
+    referer: `${host}/Inventory/new`,
     "accept-encoding": `gzip, deflate, br, zstd`,
     "accept-language": `en-US,en;q=0.9`,
     priority: `u=1, i`,
@@ -423,11 +425,11 @@ let params5 = {
     "content-type": `application/json; charset=UTF-8`,
     "sec-ch-ua-mobile": `?0`,
     accept: `*/*`,
-    origin: `https://vaadin-bookstore-example.demo.vaadin.com`,
+    origin: `${host}`,
     "sec-fetch-site": `same-origin`,
     "sec-fetch-mode": `cors`,
     "sec-fetch-dest": `empty`,
-    referer: `https://vaadin-bookstore-example.demo.vaadin.com/Inventory/`,
+    referer: `${host}/Inventory/`,
     "accept-encoding": `gzip, deflate, br, zstd`,
     "accept-language": `en-US,en;q=0.9`,
     priority: `u=1, i`,
@@ -442,11 +444,11 @@ let params6 = {
     "content-type": `text/plain; charset=utf-8`,
     "sec-ch-ua-mobile": `?0`,
     accept: `*/*`,
-    origin: `https://vaadin-bookstore-example.demo.vaadin.com`,
+    origin: `${host}`,
     "sec-fetch-site": `same-origin`,
     "sec-fetch-mode": `cors`,
     "sec-fetch-dest": `empty`,
-    referer: `https://vaadin-bookstore-example.demo.vaadin.com/Inventory/101`,
+    referer: `${host}/Inventory/101`,
     "accept-encoding": `gzip, deflate, br, zstd`,
     "accept-language": `en-US,en;q=0.9`,
     priority: `u=1, i`,
