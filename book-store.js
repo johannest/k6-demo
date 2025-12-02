@@ -4,346 +4,357 @@ import { group, sleep, check } from "k6";
 import http from "k6/http";
 import execution from "k6/execution";
 
+// Test configuration - defines how the test will be executed
 export const options = {
-  stages: [
-    { target: 20, duration: "1m" },
-    { target: 20, duration: "3m30s" },
-    { target: 0, duration: "1m" },
-  ],
+    vus: 1, // Number of Virtual Users (simulated users)
+    duration: "5s", // How long the test should run
 };
 
 const host = "https://vaadin-bookstore-example.demo.vaadin.com/";
 
+let securityKey, uid;
+
 export default function () {
-  let params;
   let resp;
-  let match;
-  let regex;
   let url;
-  const correlation_vars = {};
 
   group("Default group", function () {
 
-    url = '${host}';
+    url = `${host}`;
     resp = http.request("GET", url, null, params1);
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    securityKey = getVaadinSecurityKey(resp.body);
+    uid = getVaadinUiId(resp.body);
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
-    resp = http.request(
-      "POST",
-      url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":4,"feature":1,"property":"error","value":false},{"type":"mSync","node":4,"feature":1,"property":"action","value":null},{"type":"mSync","node":4,"feature":1,"property":"disabled","value":false}],"syncId":0,"clientId":0}`,
-      params2,
-    );
+  url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
+  resp = http.request(
+    "POST",
+    url,
+    `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":4,"feature":1,"property":"error","value":false},{"type":"mSync","node":4,"feature":1,"property":"action","value":null},{"type":"mSync","node":4,"feature":1,"property":"disabled","value":false}],"syncId":0,"clientId":0}`,
+    params2,
+  );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+
+    console.log(`VUID: ${uid}, VSK: ${securityKey}`);
+    sleep(5)
 
     url = http.url`${host}offline.html`;
     resp = http.request("GET", url, null, params3);
     check(resp, { "status equals 200": (r) => r.status === 200 });
     
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"event","node":4,"event":"login","data":{"event.detail.username":"admin","event.detail.password":"admin"}},{"type":"mSync","node":4,"feature":1,"property":"disabled","value":true}],"syncId":1,"clientId":1}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"event","node":4,"event":"login","data":{"event.detail.username":"admin","event.detail.password":"admin"}},{"type":"mSync","node":4,"feature":1,"property":"disabled","value":true}],"syncId":1,"clientId":1}`,
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":81,"feature":1,"property":"drawerOpened","value":true},{"type":"mSync","node":81,"feature":1,"property":"primarySection","value":"navbar"},{"type":"mSync","node":81,"feature":1,"property":"overlay","value":false},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[0],"promise":0}],"syncId":2,"clientId":2}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":81,"feature":1,"property":"drawerOpened","value":true},{"type":"mSync","node":81,"feature":1,"property":"primarySection","value":"navbar"},{"type":"mSync","node":81,"feature":1,"property":"overlay","value":false},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[0],"promise":0}],"syncId":2,"clientId":2}`,
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"channel","node":1,"channel":0,"args":[{"v-sh":"1440","v-sw":"2560","v-wh":"1232","v-ww":"1200","v-bh":"1232","v-bw":"1200","v-curdate":"1764142198040","v-tzo":"-120","v-dstd":"60","v-rtzo":"-120","v-dston":"false","v-tzid":"Europe/Helsinki","v-wn":"ROOT-2521314-0.36852521681833117","v-td":"false","v-pr":"2","v-np":"MacIntel"}]},{"type":"channel","node":64,"channel":0,"args":[null]},{"type":"channel","node":64,"channel":2,"args":[null]},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"setRequestedRange","templateEventMethodArgs":[0,150],"promise":1}],"syncId":3,"clientId":3}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"channel","node":1,"channel":0,"args":[{"v-sh":"1440","v-sw":"2560","v-wh":"1232","v-ww":"1200","v-bh":"1232","v-bw":"1200","v-curdate":"1764142198040","v-tzo":"-120","v-dstd":"60","v-rtzo":"-120","v-dston":"false","v-tzid":"Europe/Helsinki","v-wn":"ROOT-2521314-0.36852521681833117","v-td":"false","v-pr":"2","v-np":"MacIntel"}]},{"type":"channel","node":64,"channel":0,"args":[null]},{"type":"channel","node":64,"channel":2,"args":[null]},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"setRequestedRange","templateEventMethodArgs":[0,150],"promise":1}],"syncId":3,"clientId":3}`,
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[1],"promise":2}],"syncId":4,"clientId":4}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[1],"promise":2}],"syncId":4,"clientId":4}`,
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"event","node":63,"event":"click","data":{"event.shiftKey":false,"event.metaKey":false,"event.detail":1,"event.ctrlKey":false,"event.clientX":1082,"event.clientY":89,"event.altKey":false,"event.button":0,"event.screenY":223,"event.screenX":2904}}],"syncId":5,"clientId":5}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"event","node":63,"event":"click","data":{"event.shiftKey":false,"event.metaKey":false,"event.detail":1,"event.ctrlKey":false,"event.clientX":1082,"event.clientY":89,"event.altKey":false,"event.button":0,"event.screenY":223,"event.screenX":2904}}],"syncId":5,"clientId":5}`,
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"event","node":51,"event":"value-changed","data":{}},{"type":"event","node":49,"event":"value-changed","data":{}},{"type":"event","node":46,"event":"value-changed","data":{}},{"type":"event","node":45,"event":"value-changed","data":{}},{"type":"event","node":37,"event":"value-changed","data":{}},{"type":"event","node":36,"event":"checked-changed","data":{}},{"type":"event","node":34,"event":"checked-changed","data":{}},{"type":"event","node":32,"event":"checked-changed","data":{}},{"type":"event","node":30,"event":"checked-changed","data":{}},{"type":"event","node":28,"event":"checked-changed","data":{}},{"type":"event","node":26,"event":"checked-changed","data":{}},{"type":"event","node":24,"event":"checked-changed","data":{}},{"type":"event","node":22,"event":"checked-changed","data":{}}],"syncId":6,"clientId":6}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"event","node":51,"event":"value-changed","data":{}},{"type":"event","node":49,"event":"value-changed","data":{}},{"type":"event","node":46,"event":"value-changed","data":{}},{"type":"event","node":45,"event":"value-changed","data":{}},{"type":"event","node":37,"event":"value-changed","data":{}},{"type":"event","node":36,"event":"checked-changed","data":{}},{"type":"event","node":34,"event":"checked-changed","data":{}},{"type":"event","node":32,"event":"checked-changed","data":{}},{"type":"event","node":30,"event":"checked-changed","data":{}},{"type":"event","node":28,"event":"checked-changed","data":{}},{"type":"event","node":26,"event":"checked-changed","data":{}},{"type":"event","node":24,"event":"checked-changed","data":{}},{"type":"event","node":22,"event":"checked-changed","data":{}}],"syncId":6,"clientId":6}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"channel","node":51,"channel":0,"args":[null]},{"type":"channel","node":51,"channel":2,"args":[null]},{"type":"channel","node":49,"channel":0,"args":[null]},{"type":"channel","node":49,"channel":2,"args":[null]},{"type":"channel","node":46,"channel":0,"args":[null]},{"type":"channel","node":46,"channel":2,"args":[null]}],"syncId":7,"clientId":7}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"channel","node":51,"channel":0,"args":[null]},{"type":"channel","node":51,"channel":2,"args":[null]},{"type":"channel","node":49,"channel":0,"args":[null]},{"type":"channel","node":49,"channel":2,"args":[null]},{"type":"channel","node":46,"channel":0,"args":[null]},{"type":"channel","node":46,"channel":2,"args":[null]}],"syncId":7,"clientId":7}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"B"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":8,"clientId":8}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"B"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":8,"clientId":8}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Bo"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":9,"clientId":9}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Bo"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":9,"clientId":9}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Boo"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":10,"clientId":10}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Boo"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":10,"clientId":10}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":11,"clientId":11}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":11,"clientId":11}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book "},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":12,"clientId":12}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book "},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":12,"clientId":12}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book o"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":13,"clientId":13}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book o"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":13,"clientId":13}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":14,"clientId":14}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":14,"clientId":14}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of "},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":15,"clientId":15}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of "},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":15,"clientId":15}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of V"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":16,"clientId":16}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of V"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":16,"clientId":16}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Va"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":17,"clientId":17}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Va"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":17,"clientId":17}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaa"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":18,"clientId":18}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaa"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":18,"clientId":18}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaad"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":19,"clientId":19}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaad"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":19,"clientId":19}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaadi"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":20,"clientId":20}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaadi"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":20,"clientId":20}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaadin"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":21,"clientId":21}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":51,"feature":1,"property":"value","value":"Book of Vaadin"},{"type":"event","node":51,"event":"value-changed","data":{}}],"syncId":21,"clientId":21}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":49,"feature":1,"property":"value","value":"1.00"},{"type":"event","node":49,"event":"value-changed","data":{}}],"syncId":22,"clientId":22}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":49,"feature":1,"property":"value","value":"1.00"},{"type":"event","node":49,"event":"value-changed","data":{}}],"syncId":22,"clientId":22}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":46,"feature":1,"property":"value","value":"1"},{"type":"event","node":46,"event":"value-changed","data":{}}],"syncId":23,"clientId":23}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":46,"feature":1,"property":"value","value":"1"},{"type":"event","node":46,"event":"value-changed","data":{}}],"syncId":23,"clientId":23}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":46,"feature":1,"property":"value","value":"10"},{"type":"event","node":46,"event":"value-changed","data":{}}],"syncId":24,"clientId":24}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":46,"feature":1,"property":"value","value":"10"},{"type":"event","node":46,"event":"value-changed","data":{}}],"syncId":24,"clientId":24}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":46,"feature":1,"property":"value","value":"100"},{"type":"event","node":46,"event":"value-changed","data":{}}],"syncId":25,"clientId":25}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":46,"feature":1,"property":"value","value":"100"},{"type":"event","node":46,"event":"value-changed","data":{}}],"syncId":25,"clientId":25}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":24,"feature":1,"property":"checked","value":true},{"type":"event","node":24,"event":"checked-changed","data":{}},{"type":"mSync","node":37,"feature":1,"property":"invalid","value":null},{"type":"mSync","node":37,"feature":1,"property":"value","value":["7"]},{"type":"event","node":37,"event":"value-changed","data":{}}],"syncId":26,"clientId":26}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":24,"feature":1,"property":"checked","value":true},{"type":"event","node":24,"event":"checked-changed","data":{}},{"type":"mSync","node":37,"feature":1,"property":"invalid","value":null},{"type":"mSync","node":37,"feature":1,"property":"value","value":["7"]},{"type":"event","node":37,"event":"value-changed","data":{}}],"syncId":26,"clientId":26}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":37,"feature":1,"property":"invalid","value":null}],"syncId":27,"clientId":27}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":37,"feature":1,"property":"invalid","value":null}],"syncId":27,"clientId":27}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"event","node":20,"event":"click","data":{"event.shiftKey":false,"event.metaKey":false,"event.detail":1,"event.ctrlKey":false,"event.clientX":1037,"event.clientY":683,"event.altKey":false,"event.button":0,"event.screenY":817,"event.screenX":2859}}],"syncId":28,"clientId":28}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"event","node":20,"event":"click","data":{"event.shiftKey":false,"event.metaKey":false,"event.detail":1,"event.ctrlKey":false,"event.clientX":1037,"event.clientY":683,"event.altKey":false,"event.button":0,"event.screenY":817,"event.screenX":2859}}],"syncId":28,"clientId":28}`,
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"event","node":96,"event":"opened-changed"},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[2],"promise":3}],"syncId":29,"clientId":29}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"event","node":96,"event":"opened-changed"},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[2],"promise":3}],"syncId":29,"clientId":29}`,
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"event","node":96,"event":"opened-changed"},{"type":"mSync","node":96,"feature":1,"property":"opened","value":false}],"syncId":30,"clientId":30}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"event","node":96,"event":"opened-changed"},{"type":"mSync","node":96,"feature":1,"property":"opened","value":false}],"syncId":30,"clientId":30}`,
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"mSync","node":64,"feature":1,"property":"value","value":"vaadin"},{"type":"event","node":64,"event":"change","data":{}}],"syncId":31,"clientId":31}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":64,"feature":1,"property":"value","value":"vaadin"},{"type":"event","node":64,"event":"change","data":{}}],"syncId":31,"clientId":31}`,
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"publishedEventHandler","node":60,"templateEventMethodName":"setRequestedRange","templateEventMethodArgs":[0,50],"promise":4},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[3],"promise":5}],"syncId":32,"clientId":32}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"publishedEventHandler","node":60,"templateEventMethodName":"setRequestedRange","templateEventMethodArgs":[0,50],"promise":4},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"confirmUpdate","templateEventMethodArgs":[3],"promise":5}],"syncId":32,"clientId":32}`,
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=uidl&v-uiId=0`;
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
       "POST",
       url,
-      `{"csrfToken":"3accb0b8-d128-45fb-97eb-703315fd0666","rpc":[{"type":"publishedEventHandler","node":60,"templateEventMethodName":"select","templateEventMethodArgs":["101"],"promise":6},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"setDetailsVisible","templateEventMethodArgs":["101"],"promise":7}],"syncId":33,"clientId":33}`,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"publishedEventHandler","node":60,"templateEventMethodName":"select","templateEventMethodArgs":["101"],"promise":6},{"type":"publishedEventHandler","node":60,"templateEventMethodName":"setDetailsVisible","templateEventMethodArgs":["101"],"promise":7}],"syncId":33,"clientId":33}`,
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
-    url = http.url`${host}?v-r=heartbeat&v-uiId=0`;
+    url = http.url`${host}?v-r=heartbeat&v-uiId=${uid}`;
     resp = http.request("POST", url, null, params6);
     check(resp, { "status equals 200": (r) => r.status === 200 });
 
   });
   sleep(1);
+}
+
+function getVaadinSecurityKey(html) {
+  const match = html.match(/["']Vaadin-Security-Key["']\s*:\s*["']([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})["']/);
+  return match ? match[1] : null;
+}
+
+function getVaadinUiId(html) {
+  const match = html.match(/["']v-uiId["']\s*:\s*(\d+)/);
+  return match ? Number(match[1]) : null;
 }
 
 let params1 = {
