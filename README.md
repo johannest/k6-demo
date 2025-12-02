@@ -6,3 +6,4 @@ This repository demostrates how to configure Grafana k6 load test script to work
 
 1. Unconfigured script: [e03700f](/../../commit/e03700f)
 2. Request parameters organized: [676f981](/../../commit/676f981)
+3. Parameterize the base URL and handle the security token: [f5b2870](/../../commit/f5b2870)
