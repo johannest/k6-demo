@@ -13,6 +13,7 @@ export const options = {
 const host = "https://vaadin-bookstore-example.demo.vaadin.com/";
 
 let securityKey, uid;
+let syncId, clientId;
 
 export default function () {
   let resp;
@@ -25,18 +26,18 @@ export default function () {
     check(resp, { "status equals 200": (r) => r.status === 200 });
     securityKey = getVaadinSecurityKey(resp.body);
     uid = getVaadinUiId(resp.body);
-
-  url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
-  resp = http.request(
-    "POST",
-    url,
-    `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":4,"feature":1,"property":"error","value":false},{"type":"mSync","node":4,"feature":1,"property":"action","value":null},{"type":"mSync","node":4,"feature":1,"property":"disabled","value":false}],"syncId":0,"clientId":0}`,
-    params2,
-  );
-    check(resp, { "status equals 200": (r) => r.status === 200 });
-
     console.log(`VUID: ${uid}, VSK: ${securityKey}`);
-    sleep(5)
+
+    url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
+    resp = http.request(
+      "POST",
+      url,
+      `{"csrfToken":"${securityKey}","rpc":[{"type":"mSync","node":4,"feature":1,"property":"error","value":false},{"type":"mSync","node":4,"feature":1,"property":"action","value":null},{"type":"mSync","node":4,"feature":1,"property":"disabled","value":false}],"syncId":0,"clientId":0}`,
+      params2,
+    );
+    check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(1);
 
     url = http.url`${host}offline.html`;
     resp = http.request("GET", url, null, params3);
@@ -50,6 +51,8 @@ export default function () {
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -59,6 +62,8 @@ export default function () {
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -68,6 +73,8 @@ export default function () {
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -77,6 +84,8 @@ export default function () {
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -86,6 +95,8 @@ export default function () {
       params2,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -95,6 +106,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -104,6 +117,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -113,6 +128,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -122,6 +139,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -131,6 +150,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -140,6 +161,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -149,6 +172,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -158,6 +183,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -167,6 +194,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -176,6 +205,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -185,6 +216,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -194,6 +227,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -203,6 +238,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -212,6 +249,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -221,6 +260,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -230,6 +271,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -239,6 +282,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -248,6 +293,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -257,6 +304,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -266,6 +315,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -275,6 +326,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -284,6 +337,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -293,6 +348,8 @@ export default function () {
       params4,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -302,6 +359,8 @@ export default function () {
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -311,6 +370,8 @@ export default function () {
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -320,6 +381,8 @@ export default function () {
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -329,6 +392,8 @@ export default function () {
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=uidl&v-uiId=${uid}`;
     resp = http.request(
@@ -338,11 +403,14 @@ export default function () {
       params5,
     );
     check(resp, { "status equals 200": (r) => r.status === 200 });
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+    sleep(0.5);
 
     url = http.url`${host}?v-r=heartbeat&v-uiId=${uid}`;
     resp = http.request("POST", url, null, params6);
     check(resp, { "status equals 200": (r) => r.status === 200 });
-
+    updateSyncAndClientIds(JSON.parse(resp.body.slice(9, -1)));
+  
   });
   sleep(1);
 }
@@ -355,6 +423,12 @@ function getVaadinSecurityKey(html) {
 function getVaadinUiId(html) {
   const match = html.match(/["']v-uiId["']\s*:\s*(\d+)/);
   return match ? Number(match[1]) : null;
+}
+
+function updateSyncAndClientIds(json) {
+    clientId = json.clientId;
+    syncId = json.syncId;
+    console.log(clientId+" "+syncId);
 }
 
 let params1 = {
